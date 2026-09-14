@@ -15,6 +15,7 @@ import re
 import math
 import time
 import traceback
+import json
 
 import pandas as pd
 import requests
@@ -101,6 +102,15 @@ HISTORY = []
 REDO_HISTORY = []
 
 IMPORT_PREVIEW = []
+
+# Cache geocoding di runtime/server.
+# Disimpan juga ke /tmp agar tidak melakukan pencarian berulang selama
+# container masih hidup. Tidak berisi data rahasia.
+GEOCODE_CACHE_FILE = os.path.join(
+    os.environ.get("TMPDIR", "/tmp"),
+    "poltrada_geocode_cache.json"
+)
+GEOCODE_CACHE = {}
 
 
 # ============================================================
@@ -405,6 +415,27 @@ HEADER_ALIASES = {
         "qty",
         "quantity",
     ],
+
+    # Koordinat opsional. Jika tersedia di Excel, sistem tidak perlu
+    # melakukan geocoding untuk outlet tersebut.
+    "lat": [
+        "lat",
+        "latitude",
+        "lintang",
+        "latitude_outlet",
+        "lat_outlet",
+        "koordinat_lat",
+    ],
+
+    "lon": [
+        "lon",
+        "lng",
+        "longitude",
+        "bujur",
+        "longitude_outlet",
+        "lon_outlet",
+        "koordinat_lon",
+    ],
 }
 
 
@@ -547,13 +578,36 @@ def validate_outlet_dataframe(df):
             )
             continue
 
+        lat_value = to_float(row.get("lat"), None) if "lat" in df.columns else None
+        lon_value = to_float(row.get("lon"), None) if "lon" in df.columns else None
+
+        if lat_value is not None and not (-90 <= lat_value <= 90):
+            errors.append(
+                f"Baris {nomor}: latitude tidak valid."
+            )
+            continue
+
+        if lon_value is not None and not (-180 <= lon_value <= 180):
+            errors.append(
+                f"Baris {nomor}: longitude tidak valid."
+            )
+            continue
+
+        # Jika hanya salah satu koordinat yang diisi, jangan diam-diam
+        # menggunakan koordinat yang tidak lengkap.
+        if (lat_value is None) != (lon_value is None):
+            errors.append(
+                f"Baris {nomor}: latitude dan longitude harus diisi berpasangan."
+            )
+            continue
+
         records.append({
             "kode": kode,
             "nama": nama,
             "alamat": alamat,
             "permintaan": float(permintaan),
-            "lat": None,
-            "lon": None,
+            "lat": lat_value,
+            "lon": lon_value,
         })
 
     result = pd.DataFrame(records)
@@ -1145,6 +1199,122 @@ def batalkan_import():
 # GEOCODING
 # ============================================================
 
+def load_geocode_cache():
+    """Membaca cache geocoding dari file sementara jika tersedia."""
+    global GEOCODE_CACHE
+
+    if GEOCODE_CACHE:
+        return GEOCODE_CACHE
+
+    try:
+        if os.path.exists(GEOCODE_CACHE_FILE):
+            with open(
+                GEOCODE_CACHE_FILE,
+                "r",
+                encoding="utf-8"
+            ) as f:
+                data = json.load(f)
+
+            if isinstance(data, dict):
+                GEOCODE_CACHE = data
+    except Exception:
+        GEOCODE_CACHE = {}
+
+    return GEOCODE_CACHE
+
+
+def save_geocode_cache():
+    """Menyimpan cache geocoding secara aman."""
+    try:
+        with open(
+            GEOCODE_CACHE_FILE,
+            "w",
+            encoding="utf-8"
+        ) as f:
+            json.dump(
+                GEOCODE_CACHE,
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+    except Exception:
+        # Cache hanya optimasi; kegagalan menulis cache tidak boleh
+        # menghentikan perhitungan rute.
+        pass
+
+
+def geocode_cache_key(outlet):
+    nama = clean_text(outlet.get("nama")).lower()
+    alamat = clean_text(outlet.get("alamat")).lower()
+    return f"{nama}|{alamat}"
+
+
+def get_cached_geocode(outlet):
+    cache = load_geocode_cache()
+    key = geocode_cache_key(outlet)
+    value = cache.get(key)
+
+    if not isinstance(value, dict):
+        return None
+
+    lat = to_float(value.get("lat"), None)
+    lon = to_float(value.get("lon"), None)
+
+    if lat is None or lon is None:
+        return None
+
+    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+        return None
+
+    return {
+        "lat": lat,
+        "lon": lon,
+        "source": "cache",
+        "display_name": value.get(
+            "display_name",
+            outlet.get("alamat") or outlet.get("nama")
+        ),
+    }
+
+
+def set_cached_geocode(outlet, result):
+    key = geocode_cache_key(outlet)
+
+    GEOCODE_CACHE[key] = {
+        "lat": result["lat"],
+        "lon": result["lon"],
+        "source": result.get("source", "geocoder"),
+        "display_name": result.get(
+            "display_name",
+            outlet.get("alamat") or outlet.get("nama")
+        ),
+        "cached_at": now_text(),
+    }
+
+    save_geocode_cache()
+
+
+def extract_plus_code(text):
+    """Mengambil Plus Code sederhana dari alamat, jika ada."""
+    text = clean_text(text).upper()
+
+    match = re.search(
+        r"(?<![A-Z0-9])([23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,})(?![A-Z0-9])",
+        text
+    )
+
+    return match.group(1) if match else ""
+
+
+def add_query_unique(container, value):
+    value = clean_text(value)
+
+    if value and value.lower() not in {
+        x.lower() for x in container
+    }:
+        container.append(value)
+
+
 def nominatim_search(
     query
 ):
@@ -1210,34 +1380,18 @@ def nominatim_search(
 def generate_geocode_queries(
     outlet
 ):
-    """Membuat banyak variasi query geocoding agar alamat bisnis lebih mudah ditemukan."""
+    """Membuat variasi query yang lebih tahan terhadap alamat bisnis."""
     nama = clean_text(outlet.get("nama"))
     alamat = clean_text(outlet.get("alamat"))
-
-    # Hilangkan informasi yang sering membuat geocoder terlalu spesifik.
-    alamat_ringkas = re.sub(
-        r"\b\d{5,6}\b", "", alamat
-    )
-    alamat_ringkas = re.sub(
-        r"\s+", " ", alamat_ringkas
-    ).strip(" ,.-")
-
-    # Buang nomor rumah/bangunan sebagai fallback kedua.
-    alamat_tanpa_nomor = re.sub(
-        r"\bNo\.?\s*[\w./-]+", "", alamat_ringkas, flags=re.I
-    )
-    alamat_tanpa_nomor = re.sub(
-        r"\s+", " ", alamat_tanpa_nomor
-    ).strip(" ,.-")
 
     queries = []
 
     def add(value):
-        value = clean_text(value)
-        if value:
-            queries.append(value)
+        add_query_unique(queries, value)
 
+    # Query paling spesifik.
     if nama and alamat:
+        add(f"{nama}, {alamat}")
         add(f"{nama}, {alamat}, Bali, Indonesia")
         add(f"{nama}, {alamat}, Indonesia")
 
@@ -1245,28 +1399,53 @@ def generate_geocode_queries(
         add(f"{alamat}, Bali, Indonesia")
         add(f"{alamat}, Indonesia")
 
-    if nama and alamat_ringkas and alamat_ringkas != alamat:
+    # Plus Code sering lebih berguna daripada nama toko.
+    plus_code = extract_plus_code(alamat)
+    if plus_code:
+        add(f"{plus_code}, Baturiti, Tabanan, Bali, Indonesia")
+        add(f"{plus_code}, Tabanan, Bali, Indonesia")
+        if nama:
+            add(f"{nama}, {plus_code}, Baturiti, Bali, Indonesia")
+
+    # Hilangkan kode pos.
+    alamat_ringkas = re.sub(
+        r"\b\d{5,6}\b",
+        "",
+        alamat
+    )
+    alamat_ringkas = re.sub(
+        r"\s+",
+        " ",
+        alamat_ringkas
+    ).strip(" ,.-")
+
+    if nama and alamat_ringkas:
         add(f"{nama}, {alamat_ringkas}, Bali, Indonesia")
         add(f"{alamat_ringkas}, Bali, Indonesia")
 
-    if nama and alamat_tanpa_nomor and alamat_tanpa_nomor != alamat_ringkas:
+    # Hilangkan nomor rumah/bangunan.
+    alamat_tanpa_nomor = re.sub(
+        r"\bNo\.?\s*[\w./-]+",
+        "",
+        alamat_ringkas,
+        flags=re.I
+    )
+    alamat_tanpa_nomor = re.sub(
+        r"\s+",
+        " ",
+        alamat_tanpa_nomor
+    ).strip(" ,.-")
+
+    if nama and alamat_tanpa_nomor:
         add(f"{nama}, {alamat_tanpa_nomor}, Bali, Indonesia")
         add(f"{alamat_tanpa_nomor}, Bali, Indonesia")
 
+    # Nama saja sebagai fallback.
     if nama:
         add(f"{nama}, Bali, Indonesia")
         add(f"{nama}, Indonesia")
 
-    result = []
-    seen = set()
-    for query in queries:
-        key = query.lower().strip()
-        if key and key not in seen:
-            seen.add(key)
-            result.append(query.strip())
-
-    return result
-
+    return queries
 
 def geocode_gudang(
     nama,
@@ -1448,10 +1627,11 @@ def geocode_public_provider(query, provider):
 
 
 def geocode_outlet(outlet):
-    """Geocode outlet dengan fallback multi-query dan multi-provider."""
+    """Geocode outlet dengan koordinat manual, cache, lalu multi-provider."""
     lat = to_float(outlet.get("lat"), None)
     lon = to_float(outlet.get("lon"), None)
 
+    # 1. Koordinat dari Excel/manual selalu diprioritaskan.
     if lat is not None and lon is not None:
         if -90 <= lat <= 90 and -180 <= lon <= 180:
             return {
@@ -1461,37 +1641,67 @@ def geocode_outlet(outlet):
                 "display_name": outlet.get("alamat") or outlet.get("nama"),
             }
 
+    # 2. Gunakan cache agar outlet yang sama tidak terus meminta API.
+    cached = get_cached_geocode(outlet)
+    if cached:
+        return cached
+
     queries = generate_geocode_queries(outlet)
     last_error = None
+
+    # Alamat bisnis di Indonesia kadang tidak ditemukan provider pertama.
     providers = ("nominatim", "arcgis", "photon")
 
     for query in queries:
         for provider in providers:
             try:
-                result = geocode_public_provider(query, provider)
+                result = geocode_public_provider(
+                    query,
+                    provider
+                )
+
                 if result:
-                    return {
+                    final_result = {
                         "lat": result["lat"],
                         "lon": result["lon"],
                         "source": provider,
-                        "display_name": result.get("display_name", query),
+                        "display_name": result.get(
+                            "display_name",
+                            query
+                        ),
                     }
+
+                    set_cached_geocode(
+                        outlet,
+                        final_result
+                    )
+
+                    return final_result
+
             except Exception as e:
                 last_error = e
-        time.sleep(0.35)
+
+        # Jangan melakukan burst request ke provider publik.
+        time.sleep(0.8)
 
     nama = clean_text(outlet.get("nama"))
     alamat = clean_text(outlet.get("alamat"))
-    detail = f" Detail terakhir: {last_error}" if last_error else ""
+
+    detail = (
+        f" Detail terakhir: {last_error}"
+        if last_error
+        else ""
+    )
 
     raise ValueError(
         "Koordinat tidak ditemukan untuk: "
         f"{nama}, {alamat}. "
-        "Sistem sudah mencoba beberapa variasi alamat dan provider geocoding. "
-        "Jika outlet ini belum terdaftar di peta, tambahkan latitude dan longitude "
-        "pada data outlet." + detail
+        "Sistem sudah mencoba beberapa variasi alamat, "
+        "Plus Code (jika tersedia), Nominatim, ArcGIS, dan Photon. "
+        "Untuk outlet yang belum terdaftar di geocoder, "
+        "isi kolom Latitude dan Longitude pada Excel."
+        + detail
     )
-
 
 def geocode_all_outlets(
     outlets
@@ -2155,13 +2365,18 @@ def sweep_order(
 
     warehouse_lat = to_float(
         gudang.get("lat"),
-        GUDANG_LAT_TETAP
+        None
     )
 
     warehouse_lon = to_float(
         gudang.get("lon"),
-        GUDANG_LON_TETAP
+        None
     )
+
+    if warehouse_lat is None or warehouse_lon is None:
+        raise ValueError(
+            "Koordinat gudang belum tersedia untuk proses optimasi."
+        )
 
     data = []
 
@@ -5089,11 +5304,13 @@ if __name__ == "__main__":
         "=============================================="
     )
 
+    # Production/deployment-safe fallback.
+    # SnapDeploy dapat menjalankan app.py secara langsung, sehingga
+    # aplikasi harus listen pada semua interface dan port dari platform.
+    port = int(os.environ.get("PORT", "5000"))
     app.run(
-
-        host="127.0.0.1",
-
-        port=5000,
-
-        debug=True
+        host="0.0.0.0",
+        port=port,
+        debug=False,
+        use_reloader=False
     )
