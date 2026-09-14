@@ -7,6 +7,7 @@
 <title>Sistem Optimasi Rute Distribusi</title>
 
 <style>
+
 :root{
     --blue:#0759a6;
     --blue2:#0b70c5;
@@ -51,52 +52,23 @@ a{
 
 
 /* ============================================================
-   HEADER POLTRADA
-   BANNER DITAMPILKAN UTUH DAN PROPORSIONAL
+   HEADER
    ============================================================ */
 
 .topbar{
-    position:relative;
-    display:block;
     width:100%;
-    height:auto;
-    min-height:0;
-    max-height:none;
-    margin:0;
-    padding:0;
     overflow:hidden;
-    background:#ffffff;
+    background:#fff;
     line-height:0;
 }
 
-.topbar .poltrada-banner{
-    position:relative;
+.poltrada-banner{
     display:block;
     width:100%;
     height:auto;
-    min-width:0;
-    min-height:0;
-    max-width:none;
-    max-height:none;
     margin:0;
     padding:0;
     border:0;
-    outline:0;
-    object-fit:initial;
-    object-position:initial;
-    box-sizing:border-box;
-}
-
-
-/* ============================================================
-   HEADER LAMA DINONAKTIFKAN
-   ============================================================ */
-
-.topbar-inner,
-.brand,
-.logo-box,
-.header-right{
-    display:none !important;
 }
 
 
@@ -175,6 +147,11 @@ a{
     padding:25px 22px 50px;
 }
 
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
 .page-head{
     display:flex;
     align-items:stretch;
@@ -229,6 +206,11 @@ a{
     font-size:11px;
 }
 
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+
 .section{
     background:#fff;
     border:1px solid var(--line);
@@ -270,6 +252,11 @@ a{
     color:var(--muted);
     line-height:1.6;
 }
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
 
 .form-grid{
     display:grid;
@@ -476,6 +463,11 @@ a{
     background:#fafcfe;
 }
 
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
 .table-wrap{
     width:100%;
     overflow-x:auto;
@@ -541,6 +533,11 @@ tr:hover td{
     color:var(--red);
 }
 
+
+/* ============================================================
+   UNDO / REDO
+   ============================================================ */
+
 .undo-panel{
     display:flex;
     justify-content:space-between;
@@ -587,6 +584,11 @@ tr:hover td{
     cursor:not-allowed;
 }
 
+
+/* ============================================================
+   DOWNLOAD
+   ============================================================ */
+
 .download-box{
     padding:18px;
     border:1px solid #dbe6ee;
@@ -599,6 +601,11 @@ tr:hover td{
     color:#687d8d;
     line-height:1.6;
 }
+
+
+/* ============================================================
+   KPI
+   ============================================================ */
 
 .kpi-grid{
     display:grid;
@@ -649,34 +656,43 @@ tr:hover td{
     font-size:11px;
 }
 
+
+/* ============================================================
+   VEHICLE
+   ============================================================ */
+
 .vehicle{
     display:grid;
-    grid-template-columns:160px 1fr 150px;
+    grid-template-columns:165px minmax(0,1fr) 155px;
     border:1px solid #dce5ec;
-    border-radius:9px;
-    margin-top:12px;
-    overflow:hidden;
+    border-radius:13px;
+    margin-top:14px;
+    overflow:visible;
     background:#fff;
+    box-shadow:0 5px 18px rgba(27,58,88,.045);
 }
 
 .vehicle-id{
-    background:#f5f8fa;
-    padding:15px;
+    background:linear-gradient(180deg,#f7fafc,#f2f6f9);
+    padding:18px 15px;
     display:flex;
     gap:10px;
     align-items:center;
+    border-left:4px solid var(--blue);
+    border-radius:13px 0 0 13px;
 }
 
 .v-number{
-    width:35px;
-    height:35px;
-    border-radius:8px;
+    width:38px;
+    height:38px;
+    border-radius:9px;
     background:var(--blue);
     color:#fff;
     display:flex;
     justify-content:center;
     align-items:center;
     font-weight:900;
+    flex:0 0 auto;
 }
 
 .truck{
@@ -686,52 +702,278 @@ tr:hover td{
 
 .vehicle-id small{
     display:block;
-    margin-top:2px;
+    margin-top:3px;
     color:#7c8b97;
     font-size:9px;
 }
 
 .vehicle-main{
-    padding:15px;
+    padding:16px 18px;
+    min-width:0;
+    overflow:visible;
 }
 
+
+/* ============================================================
+   ROUTE TIMELINE
+   ============================================================ */
+
 .route-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    color:#40566a;
     font-size:10px;
-    color:#8997a3;
     font-weight:900;
     text-transform:uppercase;
     letter-spacing:.7px;
 }
 
-.route{
+.route-hint{
+    color:#9aa8b4;
+    font-size:9px;
+    font-weight:700;
+    text-transform:none;
+    letter-spacing:0;
+}
+
+.route-track-wrap{
+    width:100%;
+    overflow:visible;
+    padding:16px 0 18px;
+}
+
+.route-track{
+    position:relative;
+    width:100%;
+    min-width:0;
+    padding:0 4px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:0;
+}
+
+.route-track::before{
+    content:"";
+    position:absolute;
+    left:22px;
+    right:22px;
+    top:20px;
+    height:3px;
+    border-radius:99px;
+    background:linear-gradient(
+        90deg,
+        #c9dceb,
+        #79b2df,
+        #c9dceb
+    );
+}
+
+.route-stop{
+    position:relative;
+    z-index:7;
+    width:28px;
+    min-width:0;
+    flex:1 1 0;
+    max-width:48px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.route-stop + .route-stop{
+    margin-left:0;
+}
+
+.route-stop.depot{
+    width:42px;
+    flex:0 0 42px;
+    max-width:42px;
+}
+
+.route-circle{
+    width:25px;
+    height:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:2px solid var(--blue);
+    background:#fff;
+    color:var(--blue);
+    font-size:8px;
+    font-weight:900;
+    position:relative;
+    z-index:10;
+    box-shadow:0 2px 7px rgba(7,89,166,.13);
+    transition:.18s ease;
+}
+
+.route-stop.depot .route-circle{
+    width:38px;
+    height:38px;
+    border-color:var(--navy);
+    background:var(--navy);
+    color:#fff;
+    font-size:15px;
+    box-shadow:0 4px 12px rgba(23,63,104,.18);
+}
+
+.route-label{
+    margin-top:6px;
+    color:#35546b;
+    font-size:8px;
+    font-weight:900;
+    text-align:center;
+    white-space:nowrap;
+    line-height:1.1;
+}
+
+.route-stop.depot .route-label{
+    color:var(--navy);
+    font-size:7px;
+    line-height:1.2;
+}
+
+.outlet-stop{
+    cursor:help;
+}
+
+.outlet-stop:hover .route-circle{
+    transform:translateY(-2px) scale(1.12);
+    background:var(--blue);
+    color:#fff;
+    box-shadow:0 5px 14px rgba(7,89,166,.24);
+}
+
+
+/* ============================================================
+   TOOLTIP
+   ============================================================ */
+
+.route-tooltip{
+    position:absolute;
+    z-index:9999;
+    left:50%;
+    bottom:calc(100% + 13px);
+    transform:translateX(-50%) translateY(5px);
+    width:245px;
+    padding:12px 13px;
+    border-radius:10px;
+    background:var(--navy);
+    color:#fff;
+    box-shadow:0 13px 30px rgba(23,63,104,.30);
+    font-size:10px;
+    line-height:1.55;
+    text-align:left;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:.16s ease;
+}
+
+.route-tooltip::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-6px;
+    width:11px;
+    height:11px;
+    background:var(--navy);
+    transform:translateX(-50%) rotate(45deg);
+}
+
+.outlet-stop:hover .route-tooltip{
+    opacity:1;
+    visibility:visible;
+    transform:translateX(-50%) translateY(0);
+}
+
+.route-tooltip strong{
+    display:block;
+    color:#fff;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.tooltip-row{
+    color:#dceafa;
+    margin-top:2px;
+}
+
+.tooltip-row b{
+    color:#fff;
+    font-weight:800;
+}
+
+
+/* ============================================================
+   ROUTE LEGEND
+   ============================================================ */
+
+.route-legend{
     display:flex;
     align-items:center;
     flex-wrap:wrap;
-    gap:5px;
-    margin-top:9px;
+    gap:12px;
+    margin-top:2px;
+    color:#82919d;
+    font-size:9px;
 }
 
-.node{
-    padding:6px 9px;
-    background:#edf6ff;
-    border:1px solid #d8eafa;
-    border-radius:5px;
-    color:var(--blue);
-    font-weight:800;
-    font-size:10px;
+.route-legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
 }
+
+.legend-dot{
+    width:9px;
+    height:9px;
+    display:inline-block;
+    border:2px solid var(--blue);
+    border-radius:50%;
+    background:#fff;
+}
+
+.legend-depot{
+    width:13px;
+    height:13px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--navy);
+    color:#fff;
+    font-size:7px;
+    font-style:normal;
+}
+
+.legend-arrow{
+    color:var(--blue);
+    font-size:13px;
+    font-style:normal;
+    font-weight:900;
+}
+
+
+/* ============================================================
+   STATS
+   ============================================================ */
 
 .stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:8px;
-    margin-top:14px;
+    margin-top:8px;
 }
 
 .stat{
     padding:8px;
     border:1px solid #edf1f4;
-    border-radius:6px;
+    border-radius:7px;
     background:#fbfcfd;
 }
 
@@ -748,6 +990,11 @@ tr:hover td{
     font-size:11px;
 }
 
+
+/* ============================================================
+   DISTANCE
+   ============================================================ */
+
 .distance{
     background:#f7fafc;
     border-left:1px solid #e3e9ee;
@@ -756,6 +1003,7 @@ tr:hover td{
     align-items:center;
     justify-content:center;
     padding:10px;
+    border-radius:0 13px 13px 0;
 }
 
 .distance span{
@@ -769,6 +1017,11 @@ tr:hover td{
     font-size:18px;
     margin-top:5px;
 }
+
+
+/* ============================================================
+   RESET
+   ============================================================ */
 
 .reset-box{
     padding:15px;
@@ -788,6 +1041,11 @@ tr:hover td{
     line-height:1.6;
 }
 
+
+/* ============================================================
+   COST
+   ============================================================ */
+
 .cost-summary{
     margin-top:13px;
     padding:10px 12px;
@@ -796,6 +1054,11 @@ tr:hover td{
     color:#7a8b98;
     font-size:10px;
 }
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
 
 .footer{
     padding:17px 25px;
@@ -813,6 +1076,35 @@ tr:hover td{
    RESPONSIVE
    ============================================================ */
 
+@media(max-width:1100px){
+
+    .vehicle{
+        grid-template-columns:145px minmax(0,1fr) 120px;
+    }
+
+    .route-circle{
+        width:23px;
+        height:23px;
+        font-size:7px;
+    }
+
+    .route-stop.depot .route-circle{
+        width:34px;
+        height:34px;
+        font-size:14px;
+    }
+
+    .route-stop.depot{
+        width:38px;
+        flex-basis:38px;
+    }
+
+    .route-label{
+        font-size:7px;
+    }
+}
+
+
 @media(max-width:900px){
 
     .sidebar{
@@ -828,9 +1120,17 @@ tr:hover td{
         grid-template-columns:1fr;
     }
 
+    .vehicle-id{
+        border-left:0;
+        border-right:0;
+        border-bottom:1px solid #e1e8ee;
+        border-radius:13px 13px 0 0;
+    }
+
     .distance{
         border-left:0;
         border-top:1px solid #e3e9ee;
+        border-radius:0 0 13px 13px;
         padding:14px;
     }
 
@@ -844,19 +1144,7 @@ tr:hover td{
 
     .topbar{
         width:100%;
-        height:auto;
-        min-height:0;
-        max-height:none;
         overflow:hidden;
-    }
-
-    .topbar .poltrada-banner{
-        width:100%;
-        height:auto;
-        min-height:0;
-        max-height:none;
-        display:block;
-        object-fit:initial;
     }
 
     .layout{
@@ -870,14 +1158,14 @@ tr:hover td{
         border-bottom:1px solid var(--line);
     }
 
+    .menu-label{
+        padding:12px 12px 7px;
+    }
+
     .menu{
         display:flex;
         overflow-x:auto;
         padding:0 8px 8px;
-    }
-
-    .menu-label{
-        padding:12px 12px 7px;
     }
 
     .menu a{
@@ -911,10 +1199,51 @@ tr:hover td{
     .footer{
         flex-direction:column;
     }
+
+    .route-hint{
+        display:none;
+    }
+
+    .route-tooltip{
+        width:205px;
+    }
+
+    .route-track::before{
+        left:17px;
+        right:17px;
+        top:18px;
+        height:2px;
+    }
+
+    .route-circle{
+        width:21px;
+        height:21px;
+        font-size:6px;
+    }
+
+    .route-stop.depot .route-circle{
+        width:30px;
+        height:30px;
+        font-size:12px;
+    }
+
+    .route-stop.depot{
+        width:32px;
+        flex-basis:32px;
+    }
+
+    .route-label{
+        font-size:6px;
+    }
+
+    .route-stop.depot .route-label{
+        font-size:6px;
+    }
 }
 
 </style>
 </head>
+
 
 <body>
 
@@ -927,14 +1256,19 @@ tr:hover td{
 
     <img
         class="poltrada-banner"
-        src="{{ url_for('static', filename='header_poltrada_web_final.png') }}"
-        alt="Sistem Optimasi Rute Distribusi - Politeknik Transportasi Darat Bali"
+        src="{{ url_for('static',filename='header_poltrada_web_final.png') }}"
+        alt="Sistem Optimasi Rute Distribusi"
     >
 
 </header>
 
 
 <div class="layout">
+
+
+<!-- ============================================================
+     SIDEBAR
+     ============================================================ -->
 
 <aside class="sidebar">
 
@@ -999,14 +1333,20 @@ tr:hover td{
 </aside>
 
 
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+
 <main class="main">
 
 <div class="content">
 
 
+<!-- FLASH MESSAGE -->
+
 {% with messages = get_flashed_messages(with_categories=true) %}
 
-    {% for category, message in messages %}
+    {% for category,message in messages %}
 
         <div
             class="callout"
@@ -1030,10 +1370,7 @@ tr:hover td{
      BERANDA
      ============================================================ -->
 
-<section
-    id="beranda"
-    class="page-head"
->
+<section id="beranda" class="page-head">
 
     <div>
 
@@ -1085,10 +1422,7 @@ tr:hover td{
      GUDANG
      ============================================================ -->
 
-<section
-    id="gudang"
-    class="section"
->
+<section id="gudang" class="section">
 
     <div class="section-head">
 
@@ -1181,10 +1515,7 @@ tr:hover td{
      ARMADA
      ============================================================ -->
 
-<section
-    id="armada"
-    class="section"
->
+<section id="armada" class="section">
 
     <div class="section-head">
 
@@ -1223,7 +1554,7 @@ tr:hover td{
                 <input
                     type="number"
                     min="1"
-                    max="10"
+                    max="50"
                     name="jumlah_kendaraan"
                     value="{{ active.jumlah_kendaraan }}"
                     required
@@ -1264,6 +1595,16 @@ tr:hover td{
 
     </form>
 
+
+    <div class="callout">
+
+        Jumlah armada dapat disesuaikan. Selama kapasitas total armada
+        mencukupi seluruh permintaan, sistem tetap dapat melakukan
+        optimasi. Penambahan armada dapat menyebabkan utilisasi
+        kendaraan menjadi lebih rendah.
+
+    </div>
+
 </section>
 
 
@@ -1271,10 +1612,7 @@ tr:hover td{
      OUTLET
      ============================================================ -->
 
-<section
-    id="outlet"
-    class="section"
->
+<section id="outlet" class="section">
 
     <div class="section-head">
 
@@ -1289,235 +1627,409 @@ tr:hover td{
     </div>
 
 
-<form
-    id="outletForm"
-    method="post"
-    action="{{ url_for('simpan_outlet') }}"
->
-
-
-    <div class="form-grid three">
-
-        <div class="field">
-
-            <label>
-                Kode Outlet
-            </label>
-
-            <input
-                id="kode"
-                name="kode"
-                placeholder="A"
-                required
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Nama Outlet
-            </label>
-
-            <input
-                id="nama"
-                name="nama"
-                placeholder="Indomaret ..."
-                required
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Permintaan (kg)
-            </label>
-
-            <input
-                id="permintaan"
-                type="number"
-                min="1"
-                step="0.01"
-                name="permintaan"
-                placeholder="Contoh: 800"
-                required
-            >
-
-        </div>
-
-    </div>
-
-
-    <div
-        class="field"
-        style="margin-top:12px"
-    >
-
-        <label>
-            Alamat Outlet
-        </label>
-
-        <input
-            id="alamat"
-            name="alamat"
-            placeholder="Alamat lengkap outlet"
-            required
-        >
-
-    </div>
-
-
-    <div class="actions">
-
-        <button
-            id="outletBtn"
-            class="btn green"
-            type="submit"
-        >
-            Tambah / Simpan Outlet
-        </button>
-
-
-        <button
-            type="button"
-            id="cancelEdit"
-            class="btn light hidden"
-            onclick="resetOutlet()"
-        >
-            Batal Edit
-        </button>
-
-    </div>
-
-
-    <div class="callout">
-
-        Gunakan alamat selengkap mungkin agar geocoding dan
-        perhitungan jarak melalui jaringan jalan lebih akurat.
-
-    </div>
-
-</form>
-
-
-<!-- ============================================================
-     IMPORT EXCEL
-     ============================================================ -->
-
-<div class="import-box">
-
-    <div class="import-title">
-
-        <span>📊</span>
-
-        Import Data Outlet dari Excel
-
-    </div>
-
-
-    <div class="import-subtitle">
-
-        Masukkan banyak outlet sekaligus melalui file Excel.
-        Data akan ditampilkan dalam preview terlebih dahulu
-        sebelum menjadi data outlet aktif.
-
-    </div>
-
-
     <form
+        id="outletForm"
         method="post"
-        action="{{ url_for('import_excel') }}"
-        enctype="multipart/form-data"
+        action="{{ url_for('simpan_outlet') }}"
     >
 
-        <div class="file-row">
+        <div class="form-grid three">
+
+            <div class="field">
+
+                <label>
+                    Kode Outlet
+                </label>
+
+                <input
+                    id="kode"
+                    name="kode"
+                    placeholder="A"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Nama Outlet
+                </label>
+
+                <input
+                    id="nama"
+                    name="nama"
+                    placeholder="Indomaret ..."
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Permintaan (kg)
+                </label>
+
+                <input
+                    id="permintaan"
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    name="permintaan"
+                    placeholder="Contoh: 800"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="field"
+            style="margin-top:12px"
+        >
+
+            <label>
+                Alamat Outlet
+            </label>
 
             <input
-                class="file-input"
-                type="file"
-                name="file_excel"
-                accept=".xlsx,.xlsm"
+                id="alamat"
+                name="alamat"
+                placeholder="Alamat lengkap outlet"
                 required
             >
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                id="outletBtn"
+                class="btn green"
+                type="submit"
+            >
+                Tambah / Simpan Outlet
+            </button>
 
 
             <button
-                type="submit"
-                class="btn excel"
+                type="button"
+                id="cancelEdit"
+                class="btn light hidden"
+                onclick="resetOutlet()"
             >
-                Upload &amp; Preview Excel
+                Batal Edit
             </button>
+
+        </div>
+
+
+        <div class="callout">
+
+            Gunakan alamat selengkap mungkin agar geocoding dan
+            perhitungan jarak melalui jaringan jalan lebih akurat.
 
         </div>
 
     </form>
 
 
-    <div class="excel-format">
+    <!-- IMPORT EXCEL -->
 
-        <strong>
-            Format kolom yang digunakan:
-        </strong>
+    <div class="import-box">
 
-        KODE |
-        NAMA INDOMARET |
-        ALAMAT |
-        PERMINTAAN
+        <div class="import-title">
 
-        <br>
+            <span>📊</span>
 
-        File yang diterima:
-        <strong>.xlsx</strong>
-        atau
-        <strong>.xlsm</strong>
+            Import Data Outlet dari Excel
 
-    </div>
-
-</div>
+        </div>
 
 
-<!-- ============================================================
-     PREVIEW EXCEL
-     ============================================================ -->
+        <div class="import-subtitle">
 
-{% if import_preview %}
+            Masukkan banyak outlet sekaligus melalui file Excel.
+            Data akan ditampilkan dalam preview terlebih dahulu
+            sebelum menjadi data outlet aktif.
 
-<div class="preview-box">
-
-    <div class="preview-header">
-
-        <div>
-
-            <strong>
-                Preview Data Excel
-            </strong>
+        </div>
 
 
-            <div class="preview-summary">
+        <form
+            method="post"
+            action="{{ url_for('import_excel') }}"
+            enctype="multipart/form-data"
+        >
 
-                {{ import_total }}
-                outlet |
+            <div class="file-row">
 
-                Total permintaan:
+                <input
+                    class="file-input"
+                    type="file"
+                    name="file_excel"
+                    accept=".xlsx,.xlsm"
+                    required
+                >
 
-                {{ "{:,.0f}".format(import_demand).replace(",", ".") }}
 
-                kg
+                <button
+                    type="submit"
+                    class="btn excel"
+                >
+                    Upload &amp; Preview Excel
+                </button>
 
             </div>
+
+        </form>
+
+
+        <div class="excel-format">
+
+            <strong>
+                Format kolom:
+            </strong>
+
+            KODE |
+            NAMA INDOMARET |
+            ALAMAT |
+            PERMINTAAN
+
+            <br>
+
+            File yang diterima:
+            <strong>.xlsx</strong>
+            atau
+            <strong>.xlsm</strong>
 
         </div>
 
     </div>
 
 
+    <!-- PREVIEW -->
+
+    {% if import_preview %}
+
+    <div class="preview-box">
+
+        <div class="preview-header">
+
+            <div>
+
+                <strong>
+                    Preview Data Excel
+                </strong>
+
+                <div class="preview-summary">
+
+                    {{ import_total }}
+                    outlet |
+
+                    Total permintaan:
+
+                    {{ "{:,.0f}".format(import_demand).replace(",", ".") }}
+
+                    kg
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="table-wrap"
+            style="margin-top:0;border:0;border-radius:0"
+        >
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>No</th>
+                        <th>Kode</th>
+                        <th>Nama Indomaret</th>
+                        <th>Alamat</th>
+                        <th>Permintaan</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for o in import_preview %}
+
+                    <tr>
+
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+                        <td class="code">
+                            {{ o.kode }}
+                        </td>
+
+                        <td>
+                            {{ o.nama }}
+                        </td>
+
+                        <td>
+                            {{ o.alamat }}
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(o.permintaan).replace(",", ".") }}
+                            kg
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="preview-actions">
+
+            <form
+                method="post"
+                action="{{ url_for('konfirmasi_import') }}"
+            >
+
+                <button
+                    class="btn green"
+                    type="submit"
+                >
+                    ✓ Konfirmasi Import
+                </button>
+
+            </form>
+
+
+            <form
+                method="post"
+                action="{{ url_for('batalkan_import') }}"
+            >
+
+                <button
+                    class="btn light"
+                    type="submit"
+                >
+                    Batalkan
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- DATA OUTLET AKTIF -->
+
     <div
-        class="table-wrap"
-        style="margin-top:0;border:0;border-radius:0"
+        class="section-head"
+        style="margin-top:20px"
     >
+
+        <div class="section-index">
+            04
+        </div>
+
+        <h3>
+            Data Outlet Aktif
+        </h3>
+
+    </div>
+
+
+    <div class="helper">
+
+        Data di bawah adalah
+        <b>data yang sedang digunakan sistem</b>.
+
+        Data dapat berasal dari input manual maupun import Excel.
+
+    </div>
+
+
+    <!-- UNDO REDO -->
+
+    <div class="undo-panel">
+
+        <div class="undo-label">
+
+            <b>
+                Riwayat perubahan data
+            </b>
+
+            <br>
+
+            Batalkan atau kembalikan perubahan terakhir.
+
+        </div>
+
+
+        <div class="undo-buttons">
+
+            <form
+                method="post"
+                action="{{ url_for('undo_action') }}"
+            >
+
+                <button
+                    class="undo-btn"
+                    type="submit"
+                    {% if not can_undo %}disabled{% endif %}
+                >
+                    ↶ &nbsp; Undo
+                </button>
+
+            </form>
+
+
+            <form
+                method="post"
+                action="{{ url_for('redo_action') }}"
+            >
+
+                <button
+                    class="undo-btn"
+                    type="submit"
+                    {% if not can_redo %}disabled{% endif %}
+                >
+                    ↷ &nbsp; Redo
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE OUTLET -->
+
+    <div class="table-wrap">
 
         <table>
 
@@ -1525,25 +2037,13 @@ tr:hover td{
 
                 <tr>
 
-                    <th>
-                        No
-                    </th>
-
-                    <th>
-                        Kode
-                    </th>
-
-                    <th>
-                        Nama Indomaret
-                    </th>
-
-                    <th>
-                        Alamat
-                    </th>
-
-                    <th>
-                        Permintaan
-                    </th>
+                    <th>No</th>
+                    <th>Kode</th>
+                    <th>Nama Outlet</th>
+                    <th>Alamat</th>
+                    <th>Permintaan</th>
+                    <th>Koordinat</th>
+                    <th>Aksi</th>
 
                 </tr>
 
@@ -1552,7 +2052,7 @@ tr:hover td{
 
             <tbody>
 
-                {% for o in import_preview %}
+                {% for o in active.outlet %}
 
                 <tr>
 
@@ -1573,10 +2073,62 @@ tr:hover td{
                     </td>
 
                     <td>
-
                         {{ "{:,.0f}".format(o.permintaan).replace(",", ".") }}
-
                         kg
+                    </td>
+
+                    <td class="coord">
+
+                        {% if o.lat is not none %}
+
+                            {{ "%.5f"|format(o.lat) }},
+                            {{ "%.5f"|format(o.lon) }}
+
+                        {% else %}
+
+                            Belum dihitung
+
+                        {% endif %}
+
+                    </td>
+
+                    <td style="white-space:nowrap">
+
+                        <button
+                            type="button"
+                            class="inline edit"
+                            onclick='editOutlet({{ o|tojson }})'
+                        >
+                            Edit
+                        </button>
+
+
+                        <a
+                            class="inline del"
+                            href="{{ url_for('hapus_outlet',kode=o.kode) }}"
+                            onclick="return confirm('Hapus outlet {{ o.kode }}?')"
+                        >
+                            Hapus
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        style="text-align:center;color:#8794a0;padding:18px"
+                    >
+
+                        Belum ada data outlet.
+
+                        Silakan masukkan data manual
+                        atau import data dari Excel.
 
                     </td>
 
@@ -1589,286 +2141,6 @@ tr:hover td{
         </table>
 
     </div>
-
-
-    <div class="preview-actions">
-
-        <form
-            method="post"
-            action="{{ url_for('konfirmasi_import') }}"
-        >
-
-            <button
-                class="btn green"
-                type="submit"
-            >
-                ✓ Konfirmasi Import
-            </button>
-
-        </form>
-
-
-        <form
-            method="post"
-            action="{{ url_for('batalkan_import') }}"
-        >
-
-            <button
-                class="btn light"
-                type="submit"
-            >
-                Batalkan
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
-
-{% endif %}
-
-
-<!-- ============================================================
-     DATA OUTLET AKTIF
-     ============================================================ -->
-
-<div
-    class="section-head"
-    style="margin-top:20px"
->
-
-    <div class="section-index">
-        04
-    </div>
-
-    <h3>
-        Data Outlet Aktif
-    </h3>
-
-</div>
-
-
-<div class="helper">
-
-    Data di bawah adalah
-    <b>data yang sedang diinput pengguna</b>.
-
-    Data dapat berasal dari input manual maupun import Excel.
-
-</div>
-
-
-<!-- ============================================================
-     UNDO REDO
-     ============================================================ -->
-
-<div class="undo-panel">
-
-    <div class="undo-label">
-
-        <b>
-            Riwayat perubahan data
-        </b>
-
-        <br>
-
-        Batalkan atau kembalikan perubahan terakhir.
-
-    </div>
-
-
-    <div class="undo-buttons">
-
-        <form
-            method="post"
-            action="{{ url_for('undo_action') }}"
-        >
-
-            <button
-                class="undo-btn"
-                type="submit"
-                {% if not can_undo %}
-                    disabled
-                {% endif %}
-            >
-                ↶ &nbsp; Undo
-            </button>
-
-        </form>
-
-
-        <form
-            method="post"
-            action="{{ url_for('redo_action') }}"
-        >
-
-            <button
-                class="undo-btn"
-                type="submit"
-                {% if not can_redo %}
-                    disabled
-                {% endif %}
-            >
-                ↷ &nbsp; Redo
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- ============================================================
-     TABLE OUTLET
-     ============================================================ -->
-
-<div class="table-wrap">
-
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>
-                    No
-                </th>
-
-                <th>
-                    Kode
-                </th>
-
-                <th>
-                    Nama Outlet
-                </th>
-
-                <th>
-                    Alamat
-                </th>
-
-                <th>
-                    Permintaan
-                </th>
-
-                <th>
-                    Koordinat
-                </th>
-
-                <th>
-                    Aksi
-                </th>
-
-            </tr>
-
-        </thead>
-
-
-        <tbody>
-
-            {% for o in active.outlet %}
-
-            <tr>
-
-                <td>
-                    {{ loop.index }}
-                </td>
-
-
-                <td class="code">
-                    {{ o.kode }}
-                </td>
-
-
-                <td>
-                    {{ o.nama }}
-                </td>
-
-
-                <td>
-                    {{ o.alamat }}
-                </td>
-
-
-                <td>
-
-                    {{ "{:,.0f}".format(o.permintaan).replace(",", ".") }}
-
-                    kg
-
-                </td>
-
-
-                <td class="coord">
-
-                    {% if o.lat is not none %}
-
-                        {{ "%.5f"|format(o.lat) }},
-                        {{ "%.5f"|format(o.lon) }}
-
-                    {% else %}
-
-                        Belum dihitung
-
-                    {% endif %}
-
-                </td>
-
-
-                <td style="white-space:nowrap">
-
-                    <button
-                        type="button"
-                        class="inline edit"
-                        onclick='editOutlet({{ o|tojson }})'
-                    >
-                        Edit
-                    </button>
-
-
-                    <a
-                        class="inline del"
-                        href="{{ url_for('hapus_outlet', kode=o.kode) }}"
-                        onclick="return confirm('Hapus outlet {{ o.kode }}?')"
-                    >
-                        Hapus
-                    </a>
-
-                </td>
-
-            </tr>
-
-
-            {% else %}
-
-            <tr>
-
-                <td
-                    colspan="7"
-                    style="
-                        text-align:center;
-                        color:#8794a0;
-                        padding:18px
-                    "
-                >
-
-                    Belum ada data outlet.
-
-                    Silakan masukkan data manual
-                    atau import data dari Excel.
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-</div>
 
 </section>
 
@@ -1897,7 +2169,7 @@ tr:hover td{
 
     <p class="desc">
 
-        Alamat input diproses melalui Nominatim untuk memperoleh
+        Alamat input diproses melalui geocoding untuk memperoleh
         koordinat, kemudian OSRM menghitung jarak dan waktu
         perjalanan berdasarkan jaringan jalan.
 
@@ -1957,8 +2229,9 @@ tr:hover td{
     <p class="desc">
 
         Sistem membagi outlet berdasarkan kapasitas kendaraan
-        pada tahap VRP, kemudian menentukan urutan kunjungan
-        setiap kendaraan menggunakan Nearest Neighbor.
+        pada tahap Vehicle Routing Problem (VRP). Setelah
+        pembagian armada diperoleh, Nearest Neighbor digunakan
+        untuk menentukan urutan kunjungan berdasarkan jarak.
 
     </p>
 
@@ -2069,7 +2342,7 @@ tr:hover td{
 
 
 <!-- ============================================================
-     HASIL
+     HASIL OPTIMASI
      ============================================================ -->
 
 <section
@@ -2092,6 +2365,8 @@ tr:hover td{
 
     {% if active.hasil %}
 
+
+    <!-- KPI -->
 
     <div class="kpi-grid">
 
@@ -2198,6 +2473,7 @@ tr:hover td{
             <strong>
 
                 Rp
+
                 {{ "{:,.0f}".format(
                     active.hasil.total_biaya
                 ).replace(",", ".") }}
@@ -2206,9 +2482,10 @@ tr:hover td{
 
         </div>
 
-
     </div>
 
+
+    <!-- INFO -->
 
     <div class="result-note">
 
@@ -2235,11 +2512,15 @@ tr:hover td{
     </div>
 
 
+    <!-- VEHICLE -->
+
     {% for r in active.hasil.rute %}
 
 
     <div class="vehicle">
 
+
+        <!-- VEHICLE INFO -->
 
         <div class="vehicle-id">
 
@@ -2345,26 +2626,192 @@ tr:hover td{
         </div>
 
 
+        <!-- ROUTE -->
+
         <div class="vehicle-main">
 
 
             <div class="route-title">
-                Rute Distribusi
+
+                <span>
+                    Rute Distribusi
+                </span>
+
+                <span class="route-hint">
+                    Gudang → outlet → Gudang
+                </span>
+
             </div>
 
 
-            <div class="route">
+            <div class="route-track-wrap">
 
-                {% for node in r.route %}
 
-                <div class="node">
-                    {{ node }}
+                <div class="route-track">
+
+
+                    <!-- GUDANG AWAL -->
+
+                    <div class="route-stop depot">
+
+                        <div class="route-circle">
+                            ⌂
+                        </div>
+
+                        <div class="route-label">
+                            Gudang<br>Mengwi
+                        </div>
+
+                    </div>
+
+
+                    <!-- OUTLET -->
+
+                    {% for node in r.route %}
+
+
+                    <div
+                        class="route-stop outlet-stop"
+                        data-code="{{ node }}"
+                    >
+
+
+                        <div class="route-circle">
+
+                            {{ node }}
+
+                        </div>
+
+
+                        <div class="route-label">
+
+                            {{ node }}
+
+                        </div>
+
+
+                        <!-- TOOLTIP -->
+
+                        <div class="route-tooltip">
+
+
+                            <strong class="tooltip-name">
+
+                                {{ node }}
+
+                            </strong>
+
+
+                            <div class="tooltip-row">
+
+                                Alamat:
+
+                                <b class="tooltip-address">
+                                    -
+                                </b>
+
+                            </div>
+
+
+                            <div class="tooltip-row">
+
+                                Permintaan:
+
+                                <b class="tooltip-demand">
+                                    -
+                                </b>
+
+                            </div>
+
+
+                            <div class="tooltip-row">
+
+                                Kategori:
+
+                                <b class="tooltip-category">
+                                    -
+                                </b>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    {% endfor %}
+
+
+                    <!-- GUDANG KEMBALI -->
+
+                    <div class="route-stop depot">
+
+                        <div class="route-circle">
+                            ⌂
+                        </div>
+
+                        <div class="route-label">
+                            Gudang<br>Mengwi
+                        </div>
+
+                    </div>
+
+
                 </div>
 
-                {% endfor %}
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="route-legend">
+
+
+                <span>
+
+                    <i class="legend-dot"></i>
+
+                    Outlet
+
+                </span>
+
+
+                <span>
+
+                    <i class="legend-depot">
+                        ⌂
+                    </i>
+
+                    Gudang Start/End
+
+                </span>
+
+
+                <span>
+
+                    <i class="legend-arrow">
+                        →
+                    </i>
+
+                    Arah perjalanan
+
+                </span>
+
+
+                <span>
+
+                    Arahkan kursor ke outlet
+                    untuk melihat detail
+
+                </span>
+
 
             </div>
 
+
+            <!-- STATS -->
 
             <div class="stats">
 
@@ -2433,6 +2880,7 @@ tr:hover td{
                     <b>
 
                         Rp
+
                         {{ "{:,.0f}".format(
                             r.biaya
                         ).replace(",", ".") }}
@@ -2444,8 +2892,11 @@ tr:hover td{
 
             </div>
 
+
         </div>
 
+
+        <!-- DISTANCE -->
 
         <div class="distance">
 
@@ -2467,6 +2918,7 @@ tr:hover td{
 
 
     </div>
+
 
     {% endfor %}
 
@@ -2709,14 +3161,16 @@ function setActive(){
 
     let current = "beranda";
 
-    const y = window.scrollY + 150;
+    const y =
+        window.scrollY + 150;
 
 
     sections.forEach(section => {
 
         if(section.offsetTop <= y){
 
-            current = section.id;
+            current =
+                section.id;
 
         }
 
@@ -2726,7 +3180,8 @@ function setActive(){
     links.forEach(link => {
 
         const active =
-            link.getAttribute("href") === "#" + current;
+            link.getAttribute("href")
+            === "#" + current;
 
         link.classList.toggle(
             "active",
@@ -2789,15 +3244,17 @@ function editOutlet(o){
 
 
 /* ============================================================
-   RESET FORM OUTLET
+   RESET OUTLET
    ============================================================ */
 
 function resetOutlet(){
 
-    document.getElementById("outletForm").reset();
+    document.getElementById("outletForm")
+        .reset();
 
 
-    document.getElementById("outletBtn").textContent =
+    document.getElementById("outletBtn")
+        .textContent =
         "Tambah / Simpan Outlet";
 
 
@@ -2814,7 +3271,9 @@ function resetOutlet(){
 function updateClock(){
 
     const clock =
-        document.getElementById("liveClock");
+        document.getElementById(
+            "liveClock"
+        );
 
 
     if(!clock){
@@ -2824,15 +3283,20 @@ function updateClock(){
     }
 
 
-    const now = new Date();
+    const now =
+        new Date();
 
 
     const day =
-        String(now.getDate()).padStart(2,"0");
+        String(
+            now.getDate()
+        ).padStart(2,"0");
 
 
     const month =
-        String(now.getMonth() + 1).padStart(2,"0");
+        String(
+            now.getMonth()+1
+        ).padStart(2,"0");
 
 
     const year =
@@ -2840,15 +3304,21 @@ function updateClock(){
 
 
     const hour =
-        String(now.getHours()).padStart(2,"0");
+        String(
+            now.getHours()
+        ).padStart(2,"0");
 
 
     const minute =
-        String(now.getMinutes()).padStart(2,"0");
+        String(
+            now.getMinutes()
+        ).padStart(2,"0");
 
 
     const second =
-        String(now.getSeconds()).padStart(2,"0");
+        String(
+            now.getSeconds()
+        ).padStart(2,"0");
 
 
     clock.textContent =
@@ -2867,6 +3337,144 @@ updateClock();
 
 
 /* ============================================================
+   DATA OUTLET UNTUK TOOLTIP
+   ============================================================ */
+
+const activeRouteOutlets =
+    {{ active.outlet|tojson }};
+
+
+function routeOutletByCode(code){
+
+    const target =
+        String(code || "")
+            .trim()
+            .toUpperCase();
+
+
+    return activeRouteOutlets.find(
+        outlet =>
+
+            String(
+                outlet.kode || ""
+            )
+            .trim()
+            .toUpperCase()
+            === target
+    );
+
+}
+
+
+function routeFormatKg(value){
+
+    const number =
+        Number(value || 0);
+
+
+    return number.toLocaleString(
+        "id-ID",
+        {
+            maximumFractionDigits:0
+        }
+    ) + " kg";
+
+}
+
+
+function setupRouteTooltips(){
+
+    document
+        .querySelectorAll(".outlet-stop")
+        .forEach(stop => {
+
+
+            const code =
+                stop.dataset.code || "";
+
+
+            const outlet =
+                routeOutletByCode(code);
+
+
+            if(!outlet){
+
+                return;
+
+            }
+
+
+            const name =
+                stop.querySelector(
+                    ".tooltip-name"
+                );
+
+
+            const address =
+                stop.querySelector(
+                    ".tooltip-address"
+                );
+
+
+            const demand =
+                stop.querySelector(
+                    ".tooltip-demand"
+                );
+
+
+            const category =
+                stop.querySelector(
+                    ".tooltip-category"
+                );
+
+
+            if(name){
+
+                name.textContent =
+                    `${outlet.kode || code} — ${outlet.nama || "Outlet"}`;
+
+            }
+
+
+            if(address){
+
+                address.textContent =
+                    outlet.alamat || "-";
+
+            }
+
+
+            if(demand){
+
+                demand.textContent =
+                    routeFormatKg(
+                        outlet.permintaan
+                    );
+
+            }
+
+
+            if(category){
+
+                category.textContent =
+                    outlet.kategori ||
+                    outlet.category ||
+                    "-";
+
+            }
+
+        });
+
+}
+
+
+window.addEventListener(
+    "load",
+    setupRouteTooltips
+);
+
+
+/* ============================================================
    AUTO SCROLL HASIL
    ============================================================ */
 
@@ -2880,7 +3488,9 @@ window.addEventListener(
             function(){
 
                 const hasil =
-                    document.getElementById("hasil");
+                    document.getElementById(
+                        "hasil"
+                    );
 
 
                 if(hasil){
